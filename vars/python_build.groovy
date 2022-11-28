@@ -47,7 +47,11 @@ def call(dockerRepoName, serviceName) {
 					}
 				}
 			}
-
+			stage('Deploy Stats') {
+				steps {
+					sh "docker stats --no-stream  $(docker ps -aq -f 'name=3850_assignment_')"
+				}
+			}
 			stage('Zip Artifacts'){
 				steps {
 					dir("${serviceName}") {
