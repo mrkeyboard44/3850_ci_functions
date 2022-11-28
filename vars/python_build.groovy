@@ -43,7 +43,7 @@ def call(dockerRepoName, serviceName) {
 				steps {
 					dir("3850_assignment") {
 						sh "docker-compose down || true"
-						sh "docker-compose up -d --build"
+						sh "docker-compose up -d"
 					}
 				}
 			}
