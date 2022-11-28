@@ -41,9 +41,10 @@ def call(dockerRepoName, serviceName, portNum) {
 					expression { params.DEPLOY }
 				}
 				steps {
-					dir("3850_assignment")
-					sh "docker-compose down || true && docker rm ${dockerRepoName} || true"
-					sh "docker-compose up -d"
+					dir("3850_assignment") {
+						sh "docker-compose down || true && docker rm ${dockerRepoName} || true"
+						sh "docker-compose up -d"
+					}
 				}
 			}
 
