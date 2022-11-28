@@ -7,7 +7,7 @@ def call(dockerRepoName, serviceName, portNum) {
 	    stages {
 			stage('Build') {
 					steps {
-						dir(${serviceName}) {
+						dir("${serviceName}") {
 							sh "pwd"
 							sh 'pip install -r requirements.txt'
 						}
@@ -16,7 +16,7 @@ def call(dockerRepoName, serviceName, portNum) {
 			}
 			stage('Python Lint') {
 				steps {
-					dir(${serviceName}) {
+					dir("${serviceName}") {
 						sh 'pylint-fail-under --fail_under 5.0 *.py'
 					}
 				}
@@ -28,7 +28,7 @@ def call(dockerRepoName, serviceName, portNum) {
 				}
 				steps {
 					withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
-						dir(${serviceName}) {
+						dir("${serviceName}") {
 							sh "docker login -u 'mrkeyboard' -p '$TOKEN' docker.io"
 							sh "docker build -t ${dockerRepoName}:latest --tag mrkeyboard/${dockerRepoName}:${serviceName} ."
 							sh "docker push mrkeyboard/${dockerRepoName}:${serviceName}"
