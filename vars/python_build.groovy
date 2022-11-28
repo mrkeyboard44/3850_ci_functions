@@ -66,8 +66,8 @@ def call(dockerRepoName, serviceName) {
 						}
 						sh 'docker inspect --format="Name: {{.Name}}\tImage: {{.Config.Image}}\tContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\tStatus:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_") > status_report.txt'
 						sh 'docker stats --no-stream  $(docker ps -aq -f "name=3850_assignment_") > usage_report.txt'
-						archiveArtifacts artifacts: "status_report.json"
-						archiveArtifacts artifacts: "usage_report.json"
+						archiveArtifacts artifacts: "status_report.txt"
+						archiveArtifacts artifacts: "usage_report.txt"
 					}
 				}
 			}
