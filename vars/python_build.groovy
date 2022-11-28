@@ -7,15 +7,18 @@ def call(dockerRepoName, serviceName, portNum) {
 	    stages {
 			stage('Build') {
 					steps {
-						sh "cd ${serviceName}"
-						sh "ls"
-						sh 'pip install -r requirements.txt'
+						dir(${serviceName})) {
+							sh "pwd"
+							sh 'pip install -r requirements.txt'
+						}
 				}
 				
 			}
 			stage('Python Lint') {
 				steps {
-					sh 'pylint-fail-under --fail_under 5.0 *.py'
+					dir(${serviceName})) {
+						sh 'pylint-fail-under --fail_under 5.0 *.py'
+					}
 				}
 
 			}
@@ -25,9 +28,11 @@ def call(dockerRepoName, serviceName, portNum) {
 				}
 				steps {
 					withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
-						sh "docker login -u 'mrkeyboard' -p '$TOKEN' docker.io"
-						sh "docker build -t ${dockerRepoName}:latest --tag mrkeyboard/${dockerRepoName}:${serviceName} ./"
-						sh "docker push mrkeyboard/${dockerRepoName}:${serviceName}"
+						dir(${serviceName}) {
+							sh "docker login -u 'mrkeyboard' -p '$TOKEN' docker.io"
+							sh "docker build -t ${dockerRepoName}:latest --tag mrkeyboard/${dockerRepoName}:${serviceName} ."
+							sh "docker push mrkeyboard/${dockerRepoName}:${serviceName}"
+						}
 					}
 				}
 			}
