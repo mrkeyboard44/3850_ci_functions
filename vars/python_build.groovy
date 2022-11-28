@@ -48,8 +48,10 @@ def call(dockerRepoName, serviceName, portNum) {
 
 			stage('Zip Artifacts'){
 				steps {
-					sh 'zip -r app.zip *.py'
-					archiveArtifacts artifacts: 'app.zip'
+					dir("${serviceName}") {
+						sh "zip -r ${serviceName}_app.zip *.py"
+						archiveArtifacts artifacts: "${serviceName}_app.zip"
+					}
 				}
 			}
 	    
