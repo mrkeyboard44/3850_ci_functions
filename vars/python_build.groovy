@@ -7,7 +7,8 @@ def call(dockerRepoName, serviceName, portNum) {
 	    stages {
 			stage('Build') {
 					steps {
-					sh 'pip install -r requirements.txt'
+						sh "cd ${serviceName}"
+						sh 'pip install -r requirements.txt'
 				}
 				
 			}
@@ -24,7 +25,7 @@ def call(dockerRepoName, serviceName, portNum) {
 				steps {
 					withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
 						sh "docker login -u 'mrkeyboard' -p '$TOKEN' docker.io"
-						sh "docker build -t ${dockerRepoName}:latest --tag mrkeyboard/${dockerRepoName}:${serviceName} ${serviceName}/"
+						sh "docker build -t ${dockerRepoName}:latest --tag mrkeyboard/${dockerRepoName}:${serviceName} ./"
 						sh "docker push mrkeyboard/${dockerRepoName}:${serviceName}"
 					}
 				}
