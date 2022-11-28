@@ -1,4 +1,4 @@
-def call(dockerRepoName, serviceName, portNum) {
+def call(dockerRepoName, serviceName) {
 	pipeline {
 	    agent any
 		parameters {
