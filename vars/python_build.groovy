@@ -52,7 +52,7 @@ def call(dockerRepoName, serviceName) {
 					dir("${serviceName}") {
 						script {
 							STATUS_REPORT = sh (
-								script: 'docker inspect --format="Name: {{.Name}}\tImage: {{.Config.Image}}\tContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\tStatus:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
+								script: 'docker inspect --format="Name: {{.Name}}\n\tImage: {{.Config.Image}}\n\tContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\n\tStatus:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
 								returnStdout: true
 							)
 							println STATUS_REPORT
@@ -64,7 +64,7 @@ def call(dockerRepoName, serviceName) {
 							)
 							println USAGE_REPORT
 						}
-						sh 'docker inspect --format="Name: {{.Name}}\tImage: {{.Config.Image}}\tContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\tStatus:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_") > status_report.txt'
+						sh 'docker inspect --format="Name: {{.Name}}\n\tImage: {{.Config.Image}}\n\tContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\n\tStatus:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_") > status_report.txt'
 						sh 'docker stats --no-stream  $(docker ps -aq -f "name=3850_assignment_") > usage_report.txt'
 						archiveArtifacts artifacts: "status_report.txt"
 						archiveArtifacts artifacts: "usage_report.txt"
