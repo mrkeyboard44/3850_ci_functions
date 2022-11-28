@@ -1,4 +1,4 @@
-def call(dockerRepoName, imageName, portNum) {
+def call(dockerRepoName, serviceName, portNum) {
 	pipeline {
 	    agent any
 		parameters {
@@ -17,34 +17,6 @@ def call(dockerRepoName, imageName, portNum) {
 				}
 
 			}
-			stage('Test and Coverage') {
-				steps {
-					script {
-						scriptDir = new File(getClass().protectionDomain.codeSource.location.path).parent
-						echo "$scriptDir"
-						sh 'rm -rfv *test-reports/*'
-						def files = findFiles(glob: "**/test_*.py")
-						for (file in files) {
-							def file_path = file.path
-							sh "coverage run --omit */site-packages/*,*/dist-packages/* $file_path"
-						}
-						sh 'coverage report'
-					}
-				}
-				post {
-					always {
-						script {
-							def files = findFiles(glob: "**/*test-reports/*.xml")
-							for (file in files) {
-								def file_path = file.path
-								junit "$file_path"
-							}
-						}
-
-					}
-				}
-
-			}
 			stage('Package') {
 				when {
 					expression { env.GIT_BRANCH == 'origin/main' }
@@ -52,12 +24,12 @@ def call(dockerRepoName, imageName, portNum) {
 				steps {
 					withCredentials([string(credentialsId: 'DockerHub', variable: 'TOKEN')]) {
 						sh "docker login -u 'mrkeyboard' -p '$TOKEN' docker.io"
-						sh "docker build -t ${dockerRepoName}:latest --tag mrkeyboard/${dockerRepoName}:${imageName} ."
-						sh "docker push mrkeyboard/${dockerRepoName}:${imageName}"
+						sh "docker build -t ${dockerRepoName}:latest --tag mrkeyboard/${dockerRepoName}:${serviceName} ${serviceName}/"
+						sh "docker push mrkeyboard/${dockerRepoName}:${serviceName}"
 					}
 				}
 			}
-			stage('Deliver') {
+			stage('Deploy') {
 				when {
 					expression { params.DEPLOY }
 				}
