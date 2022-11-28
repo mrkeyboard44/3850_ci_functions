@@ -50,16 +50,20 @@ def call(dockerRepoName, serviceName) {
 			stage('Deploy Stats') {
 				steps {
 					dir("${serviceName}") {
-						STATUS_REPORT = sh (
-							script: 'docker inspect --format="Name: {.Name} || Image: {{.Config.Image}} || ContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} Status:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
-							returnStdout: true
-						)
-						println STATUS_REPORT
-						USAGE_REPORT = sh (
-							script: 'docker stats --no-stream  $(docker ps -aq -f "name=3850_assignment_")',
-							returnStdout: true
-						)
-						println USAGE_REPORT
+						script {
+							STATUS_REPORT = sh (
+								script: 'docker inspect --format="Name: {.Name} || Image: {{.Config.Image}} || ContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} Status:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
+								returnStdout: true
+							)
+							println STATUS_REPORT
+						}
+						script {
+							USAGE_REPORT = sh (
+								script: 'docker stats --no-stream  $(docker ps -aq -f "name=3850_assignment_")',
+								returnStdout: true
+							)
+							println USAGE_REPORT
+						}
 						sh 'docker inspect --format="Name: {.Name} || Image: {{.Config.Image}} || ContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} Status:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_") > ip_addr_report.json'
 					}
 				}
