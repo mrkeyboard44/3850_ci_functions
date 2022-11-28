@@ -42,7 +42,7 @@ def call(dockerRepoName, serviceName, portNum) {
 				}
 				steps {
 					dir("3850_assignment") {
-						sh "docker-compose down || true && source remove_container.sh '${serviceName}' || true"
+						sh "docker-compose down || true && ./remove_container.sh '${serviceName}' || true"
 						sh "docker-compose up -d"
 					}
 				}
