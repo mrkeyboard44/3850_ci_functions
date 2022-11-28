@@ -8,6 +8,7 @@ def call(dockerRepoName, serviceName, portNum) {
 			stage('Build') {
 					steps {
 						sh "cd ${serviceName}"
+						sh "ls"
 						sh 'pip install -r requirements.txt'
 				}
 				
