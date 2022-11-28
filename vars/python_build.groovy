@@ -47,12 +47,12 @@ def call(dockerRepoName, serviceName) {
 					}
 				}
 			}
-			stage('Deploy Stats') {
+			stage('Container Stats') {
 				steps {
 					dir("${serviceName}") {
 						script {
 							STATUS_REPORT = sh (
-								script: 'docker inspect --format="Name: {{.Name}} || Image: {{.Config.Image}} || ContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} Status:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
+								script: 'docker inspect --format="Name: {{.Name}}\tImage: {{.Config.Image}}\tContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\tStatus:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
 								returnStdout: true
 							)
 							println STATUS_REPORT
@@ -64,7 +64,10 @@ def call(dockerRepoName, serviceName) {
 							)
 							println USAGE_REPORT
 						}
-						sh 'docker inspect --format="Name: {.Name} || Image: {{.Config.Image}} || ContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} Status:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_") > ip_addr_report.json'
+						sh 'docker inspect --format="Name: {{.Name}}\tImage: {{.Config.Image}}\tContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\tStatus:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_") > status_report.txt'
+						sh 'docker stats --no-stream  $(docker ps -aq -f "name=3850_assignment_") > usage_report.txt'
+						archiveArtifacts artifacts: "status_report.json"
+						archiveArtifacts artifacts: "usage_report.json"
 					}
 				}
 			}
