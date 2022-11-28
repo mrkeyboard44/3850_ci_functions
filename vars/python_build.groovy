@@ -7,7 +7,7 @@ def call(dockerRepoName, serviceName, portNum) {
 	    stages {
 			stage('Build') {
 					steps {
-						dir(${serviceName})) {
+						dir(${serviceName}) {
 							sh "pwd"
 							sh 'pip install -r requirements.txt'
 						}
@@ -16,7 +16,7 @@ def call(dockerRepoName, serviceName, portNum) {
 			}
 			stage('Python Lint') {
 				steps {
-					dir(${serviceName})) {
+					dir(${serviceName}) {
 						sh 'pylint-fail-under --fail_under 5.0 *.py'
 					}
 				}
