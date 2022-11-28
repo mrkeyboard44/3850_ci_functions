@@ -52,7 +52,7 @@ def call(dockerRepoName, serviceName) {
 					dir("${serviceName}") {
 						script {
 							STATUS_REPORT = sh (
-								script: 'docker inspect --format="Name: {.Name} || Image: {{.Config.Image}} || ContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} Status:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
+								script: 'docker inspect --format="Name: {{.Name}} || Image: {{.Config.Image}} || ContainerIP: {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}} Status:{{.State.Status}}"  $(docker ps -aq -f "name=3850_assignment_")',
 								returnStdout: true
 							)
 							println STATUS_REPORT
